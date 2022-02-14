@@ -28,6 +28,7 @@ struct node{
 	int op_code;
 	char lexeme[256];
 	char pos[20];
+	char reg[4];
 	int loc;
 	struct node* next;
 };
@@ -42,6 +43,8 @@ char looker;
 int currToken;
 
 int lineno = 1;
+
+int registers = 0;
 
 struct node* head;
 

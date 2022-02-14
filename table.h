@@ -38,35 +38,35 @@ int depth = 0;
 
 void printNode(struct node* n);
 bool find(char* ident, struct node* N);
+bool putRegister(char* ident, struct node* N, int n);
 
-//Put symbol at head of list
-void pushSymbol(int op, char* ident){
-		if(find(ident, head)){return;}
-		struct node* chain_link = (struct node*) malloc(sizeof(struct node));
-		chain_link->op_code = op;
-		strcpy(chain_link->lexeme, ident);
-		strcpy(chain_link->pos, tab[((op - (op%10))/10)-1][op%10]);
-	
-		chain_link->next = head;
+void putSymbol(int op, char* ident){
+	struct node* chain_link = (struct node*) malloc(sizeof(struct node));
+	chain_link->op_code = op;
+	strcpy(chain_link->lexeme, ident);
+	strcpy(chain_link->pos, tab[((op - (op%10))/10)-1][op%10]);
+
+	if(head == NULL){
 		head = chain_link;
+	}
+	else if(!find(ident, head)){
+		struct node* temp = head;
+		while(temp->next != NULL){
+			temp = temp->next;
+		}
+		temp->next = chain_link;
+	}
 }
-/*
-void putSymbol(int op, char* ident, struct node* head){
-	if(){
-		chain_link
+
+bool putRegister(char* ident, struct node* N, int n){
+	if(N == NULL)
+		return false;
+	if(strcmp(N->lexeme,ident) == 0){
+		sprintf(N->reg, "R%d", n);
+		return true;
 	}
-	else if(head->next != NULL){
-		putSymbol(op, ident, head->next);
-	}
-	else{
-		struct node* chain_link = (struct node*) malloc(sizeof(struct node));
-		chain_link->op_code = op;
-		strcpy(chain_link->lexeme, ident);
-		strcpy(chain_link->pos, tab[((op - (op%10))/10)-1][op%10]);
-	
-		head->next = chain_link;
-	}
-}*/
+	putRegister(ident, N->next, n);
+}
 
 char* tableLookup(int tok){
 	return tab[((tok - (tok%10))/10)-1][tok%10];
@@ -96,7 +96,7 @@ void printSymbol(int op, char* actual){
 }
 
 void printNode(struct node* n){
-	printf("%d\t\t\t%s\t\t%d\t\t\t%s\n", n->loc, n->lexeme,n->op_code, n->pos);
+	printf("%s\t\t%d\t\t\t%s\t\t\t%s\n", n->lexeme,n->op_code,n->reg, n->pos);
 }
 
 bool find(char *ident, struct node* N){

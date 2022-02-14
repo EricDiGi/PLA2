@@ -9,7 +9,7 @@
 #include "lexeme.h"
 
 /*********************************
-OPERATES AS A PUSHDOWN AUTOMATA
+OPERATES AS REGULAR GRAMMAR
 *********************************/
 void process();
 void declaration();
@@ -23,7 +23,6 @@ void t_match(int, int);
 void match(int token){
 	if(lookahead == token){
 		lookahead = lexan();
-		pushSymbol(lookahead, lexeme);
 	}
 	else{
 		printf("Syntax error - Line %d - expected \'%s\' got %s\n",lineno,tableLookup(token),lexeme);
@@ -33,8 +32,9 @@ void match(int token){
 
 void t_match(int token, int type){
 	if(lookahead == token){
+		if(lookahead != SEMICOLON)
+			putSymbol(type, lexeme);
 		lookahead = lexan();
-		pushSymbol(type, lexeme);
 	}
 	else{
 		printf("Syntax error - Line %d - expected \'%s\' got %s\n",lineno,tableLookup(token),lexeme);
@@ -53,21 +53,21 @@ void process(){
 }
 
 // D -> tV;
-// V -> i*
 void declaration(){
 	int type = UNKNOWN;
 	if(lookahead == DTYPE){
 		type = type_lookup(lexeme);
 	}
-	t_match(DTYPE, type);
+	match(DTYPE);
 	variable(type);
 	match(SEMICOLON);
 }
 
+// V -> i*
 void variable(int type){
 	while(lookahead == IDENT){
-		//printf("lexeme: %s :: %d\n", lexeme, type);
-		t_match(IDENT, type);
+		putSymbol(type, lexeme);
+		match(IDENT);
 	}
 }
 
@@ -95,19 +95,25 @@ void term(){
 // 
 void factor(){
 	if(lookahead == IDENT){
+		if(!find(lexeme,head)){
+			printf("Error - line %d - Variable %s not declared\n", lineno, lexeme);
+			exit(0);
+		}
+		putSymbol(lookahead, lexeme);
 		match(IDENT);
 	}
 	else if(lookahead == INT_LIT){
+		putSymbol(lookahead, lexeme);
 		match(INT_LIT);
 	}
 	else if(lookahead == LEFT_PAREN){
 		match(LEFT_PAREN);
+		if(lookahead == RIGHT_PAREN){
+			printf("Error - line %d - Expected identifier or literal got ')'\n", lineno);
+			exit(EXIT_FAILURE);
+		}
 		term();
 		match(RIGHT_PAREN);
-	}
-	else{
-		error("Mismatched Parenthesis");
-		exit(0);
 	}
 }
 

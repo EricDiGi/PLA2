@@ -27,20 +27,22 @@ int main(int argc, char** argv){
 		while(lookahead != BEGIN_PROG){
 			match(lookahead);
 			if(lookahead == DONE){
-				perror("Never found start of program\n");
+				printf("Never found start of program\n");
 				exit(EXIT_FAILURE);
 			}
 		}
+		putSymbol(lookahead, lexeme);
 		match(BEGIN_PROG);
 		while(lookahead != END_PROG){
 			if(lookahead == DONE){
-				perror("Never found start of program\n");
+				printf("Never found start of program\n");
 				exit(EXIT_FAILURE);
 			}
 			process();
 		}
+		putSymbol(lookahead, lexeme);
 		printf("Success!\n");
-		//printTable();
+		printTable();
 	}
 }
 
