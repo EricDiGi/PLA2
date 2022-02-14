@@ -15,12 +15,12 @@ FILE CONTAINS ELEMENT SHARED BY ALL MODULES
 // Program will arithmatically ignore DONE when approaching the symbol lookup
 enum Token {
 	DONE = -1,
-	LETTER=10, DIGIT, STOP, UNKNOWN, 
+	LETTER=10, DIGIT, STOP, UNKNOWN, DTYPE, INT,
 	INT_LIT = 20, IDENT, 
 	COMMENT = 30, WHITESPACE, NEWLINE, 
 	UNDERSCORE = 40, SEMICOLON, 
 	ASSIGN_OP = 50, ADD_OP, SUB_OP, MULT_OP, DIV_OP, LEFT_PAREN, RIGHT_PAREN,
-	BEGIN_PROG = 60, END_PROG
+	BEGIN_PROG = 60, END_PROG,
 };
 
 
@@ -34,6 +34,8 @@ struct node{
 
 char ch;
 FILE* in_fp;
+
+char lexeme[256];
 
 int lookahead;
 char looker;

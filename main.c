@@ -23,19 +23,24 @@ int main(int argc, char** argv){
 	}
 	else{
 		printf("Compiling...\n");
-		
-		lookahead = lexan();
-		match(BEGIN_PROG);
-		while(lookahead != DONE){
-			if(lookahead != BEGIN_PROG)
-				assignment();
-			if(lookahead == END_PROG){
-				printf("Success\n");
-				printTable();
-				exit(0);
+
+		while(lookahead != BEGIN_PROG){
+			match(lookahead);
+			if(lookahead == DONE){
+				perror("Never found start of program\n");
+				exit(EXIT_FAILURE);
 			}
 		}
-		error("Program has no End");
+		match(BEGIN_PROG);
+		while(lookahead != END_PROG){
+			if(lookahead == DONE){
+				perror("Never found start of program\n");
+				exit(EXIT_FAILURE);
+			}
+			process();
+		}
+		printf("Success!\n");
+		//printTable();
 	}
 }
 

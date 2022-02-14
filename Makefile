@@ -11,4 +11,4 @@ compile: $(OBJECTS) main.c common.h parse.h table.h lexeme.h
 
 clean:
 	rm -rf *.dSYM
-	$(RM) *.o *.gc* test/*.o core main
+	$(RM) *.o *.gc* test/*.o core main compile

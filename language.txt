@@ -1,0 +1,10 @@
+P -> BQE.
+Q -> [D*A*]* | e
+D -> tV;
+V -> i*
+A -> i = T;
+T -> BF[OF]*b | BTb
+B -> (
+b -> )
+F -> i0i
+O -> + | - | * | /

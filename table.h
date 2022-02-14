@@ -24,7 +24,7 @@ int categories = 6;
 };*/
 //This one helps build output better
 char tab[6][10][20] = {
-	{"<LETTER>","<DIGIT>","<UNKNOWN>"},
+	{"<LETTER>","<DIGIT>","<STOP>","<UNKNOWN>", "type identifier","Integer"},
 	{"Number Literal","Identifier"},
 	{"Comment","<WHITESPACE>","<NEWLINE>"},
 	{"_",";"},
@@ -50,6 +50,23 @@ void pushSymbol(int op, char* ident){
 		chain_link->next = head;
 		head = chain_link;
 }
+/*
+void putSymbol(int op, char* ident, struct node* head){
+	if(){
+		chain_link
+	}
+	else if(head->next != NULL){
+		putSymbol(op, ident, head->next);
+	}
+	else{
+		struct node* chain_link = (struct node*) malloc(sizeof(struct node));
+		chain_link->op_code = op;
+		strcpy(chain_link->lexeme, ident);
+		strcpy(chain_link->pos, tab[((op - (op%10))/10)-1][op%10]);
+	
+		head->next = chain_link;
+	}
+}*/
 
 char* tableLookup(int tok){
 	return tab[((tok - (tok%10))/10)-1][tok%10];
@@ -60,7 +77,8 @@ void printTable(){
 
 	struct node* temp = head;
 	while(temp->next != NULL){
-		printf("%s, ", temp->lexeme);
+		//printf("%s, ", temp->lexeme);
+		printNode(temp);
 		temp = temp->next;
 	}
 	printf("%s\n", temp->lexeme);

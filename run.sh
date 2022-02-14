@@ -12,8 +12,8 @@ printf "\n"
 
 for i in {1..8};
 do 
-	printf ">>> ./compile a$i\n"
-	./compile "a$i"
+	printf ">>> ./compile a$i.in\n"
+	./compile "a$i.in"
 	printf "\n";
 done;
 exit;

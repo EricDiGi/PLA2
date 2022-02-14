@@ -16,7 +16,6 @@ PERFORMED IN LINEAR FASHION
 
 *************************************/
 
-char lexeme[256];
 int lexLen;
 
 int lexan();
@@ -31,7 +30,7 @@ int lexan(){
 	
 	while(1){
 		ch = getc(in_fp);
-		if(ch == 32 || ch == 9){}
+		if(ch == 32 || ch == 9 || ch == ','){}
 		else if(ch == '\n'){lineno++;}
 		else if(ch == '~'){
 			while((ch = getc(in_fp)) != '\n'){}
@@ -50,8 +49,6 @@ int lexan(){
 				putLexeme(ch);
 			ungetc(ch,in_fp);
 			int tok = reservation();
-			if(tok == IDENT)
-				pushSymbol(tok, lexeme);
 			return tok;
 		}
 		else if (ch == EOF){
@@ -60,6 +57,7 @@ int lexan(){
 		else{
 			return lookup(ch);
 		}
+
 	}
 }
 
@@ -120,11 +118,21 @@ int reservation(){
 	else if(strcmp(lexeme, "end.") == 0){
 		return END_PROG;
 	}
+	else if(strcmp(lexeme, "int") == 0){
+		return DTYPE;
+	}
 	if(!isValid(lexeme)){
 		printf("Error - Line %d - Invalid Identifier %s\n", lineno, lexeme);
 		exit(0);
 	}
 	return IDENT;
+}
+
+int type_lookup(char* l){
+	if(strcmp(l,"int") == 0){
+		return INT;
+	}
+	return UNKNOWN;
 }
 
 // Check identifier doesn't have chained or dangling underscores

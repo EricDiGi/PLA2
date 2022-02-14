@@ -11,16 +11,67 @@
 /*********************************
 OPERATES AS A PUSHDOWN AUTOMATA
 *********************************/
-
-
+void process();
+void declaration();
+void variable(int);
 void assignment();
-void expression();
 void term();
 void factor();
-void match();
+void match(int);
+void t_match(int, int);
 
+void match(int token){
+	if(lookahead == token){
+		lookahead = lexan();
+		pushSymbol(lookahead, lexeme);
+	}
+	else{
+		printf("Syntax error - Line %d - expected \'%s\' got %s\n",lineno,tableLookup(token),lexeme);
+		exit(0);
+	}
+}
 
+void t_match(int token, int type){
+	if(lookahead == token){
+		lookahead = lexan();
+		pushSymbol(type, lexeme);
+	}
+	else{
+		printf("Syntax error - Line %d - expected \'%s\' got %s\n",lineno,tableLookup(token),lexeme);
+		exit(0);
+	}
+}
 
+//Q -> [D*A*]* | e
+void process(){
+	while(lookahead == DTYPE){
+		declaration();
+	}
+	while(lookahead == IDENT){
+		assignment();
+	}
+}
+
+// D -> tV;
+// V -> i*
+void declaration(){
+	int type = UNKNOWN;
+	if(lookahead == DTYPE){
+		type = type_lookup(lexeme);
+	}
+	t_match(DTYPE, type);
+	variable(type);
+	match(SEMICOLON);
+}
+
+void variable(int type){
+	while(lookahead == IDENT){
+		//printf("lexeme: %s :: %d\n", lexeme, type);
+		t_match(IDENT, type);
+	}
+}
+
+// A -> i = T;
 void assignment(){
 	match(IDENT);
 	if(lookahead != ASSIGN_OP){
@@ -32,7 +83,7 @@ void assignment(){
 	match(SEMICOLON);
 }
 
-
+// T -> BF(OF)*b | BTb
 void term(){
 	factor();
 	while(lookahead == ADD_OP || lookahead == SUB_OP || lookahead == MULT_OP || lookahead == DIV_OP){
@@ -41,6 +92,7 @@ void term(){
 	}
 }
 
+// 
 void factor(){
 	if(lookahead == IDENT){
 		match(IDENT);
@@ -50,22 +102,11 @@ void factor(){
 	}
 	else if(lookahead == LEFT_PAREN){
 		match(LEFT_PAREN);
-		//expression();
 		term();
 		match(RIGHT_PAREN);
 	}
 	else{
 		error("Mismatched Parenthesis");
-		exit(0);
-	}
-}
-
-void match(int token){
-	if(lookahead == token){
-		lookahead = lexan();
-	}
-	else{
-		printf("Syntax error - Line %d - expected \'%s\' got %s\n",lineno,tableLookup(token),lexeme);
 		exit(0);
 	}
 }
