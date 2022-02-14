@@ -67,6 +67,7 @@ void declaration(){
 void variable(int type){
 	while(lookahead == IDENT){
 		putSymbol(type, lexeme);
+		putRegister(lexeme, head, registers);
 		match(IDENT);
 	}
 }
@@ -100,10 +101,12 @@ void factor(){
 			exit(0);
 		}
 		putSymbol(lookahead, lexeme);
+		putRegister(lexeme, head, registers);
 		match(IDENT);
 	}
 	else if(lookahead == INT_LIT){
 		putSymbol(lookahead, lexeme);
+		putRegister(lexeme, head, registers);
 		match(INT_LIT);
 	}
 	else if(lookahead == LEFT_PAREN){

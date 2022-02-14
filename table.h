@@ -63,6 +63,7 @@ bool putRegister(char* ident, struct node* N, int n){
 		return false;
 	if(strcmp(N->lexeme,ident) == 0){
 		sprintf(N->reg, "R%d", n);
+		registers++;
 		return true;
 	}
 	putRegister(ident, N->next, n);
