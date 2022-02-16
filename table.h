@@ -40,7 +40,8 @@ void printNode(struct node* n);
 bool find(char* ident, struct node* N);
 bool putRegister(char* ident, struct node* N, int n);
 
-void putSymbol(int op, char* ident){
+int putSymbol(int op, char* ident){
+	int idex = -1;
 	struct node* chain_link = (struct node*) malloc(sizeof(struct node));
 	chain_link->op_code = op;
 	strcpy(chain_link->lexeme, ident);
@@ -48,14 +49,19 @@ void putSymbol(int op, char* ident){
 
 	if(head == NULL){
 		head = chain_link;
+		idex = 0;
 	}
 	else if(!find(ident, head)){
+		idex = 0;
 		struct node* temp = head;
 		while(temp->next != NULL){
 			temp = temp->next;
+			idex++;
 		}
 		temp->next = chain_link;
+		idex++;
 	}
+	return idex;
 }
 
 bool putRegister(char* ident, struct node* N, int n){
@@ -63,10 +69,40 @@ bool putRegister(char* ident, struct node* N, int n){
 		return false;
 	if(strcmp(N->lexeme,ident) == 0){
 		sprintf(N->reg, "R%d", n);
-		registers++;
 		return true;
 	}
-	putRegister(ident, N->next, n);
+	return putRegister(ident, N->next, n);
+}
+
+bool hasRegister(char* l){
+	if(head == NULL){
+		return 0;
+	}
+	else{
+		struct node* temp = head;
+		while(temp->next != NULL){
+			if(strcmp(temp->lexeme, l) == 0){
+				return true;
+			}
+			temp = temp->next;
+		}
+	}
+	return false;
+}
+
+char* assocRegister(char* l){
+	if(head == NULL){
+		return 0;
+	}
+	else{
+		struct node* temp = head;
+		while(temp->next != NULL){
+			if(strcmp(temp->lexeme, l) == 0){
+				return temp->reg;
+			}
+			temp = temp->next;
+		}
+	}
 }
 
 char* tableLookup(int tok){
@@ -78,7 +114,6 @@ void printTable(){
 
 	struct node* temp = head;
 	while(temp->next != NULL){
-		//printf("%s, ", temp->lexeme);
 		printNode(temp);
 		temp = temp->next;
 	}
