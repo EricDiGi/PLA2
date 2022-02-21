@@ -142,5 +142,60 @@ bool find(char *ident, struct node* N){
 		return true;
 	return find(ident, N->next);
 }
+
+int putSmall(int op, char* ident){
+	bool idex = true;
+	struct node* chain_link = (struct node*) malloc(sizeof(struct node));
+	chain_link->op_code = op;
+	strcpy(chain_link->lexeme, ident);
+	strcpy(chain_link->pos, tab[((op - (op%10))/10)-1][op%10]);
+
+	if(small == NULL){
+		small = chain_link;
+		idex = true;
+	}
+	else if(!find(ident, small)){
+		idex = true;
+		struct node* temp = small;
+		while(temp->next != NULL){
+			temp = temp->next;
+		}
+		temp->next = chain_link;
+	}
+	return idex;
+}
+
+void printSmall(){
+	struct node* temp = small;
+	sprintf(output_buffer+strlen(output_buffer), "*****[");
+	while(temp->next != NULL){
+		sprintf(output_buffer+strlen(output_buffer),"%s, ",temp->lexeme);
+		temp = temp->next;
+	}
+	sprintf(output_buffer+strlen(output_buffer),"%s]*****\n", temp->lexeme);
+}
+
+void freeHead(){
+	struct node* temp;
+
+	while (head != NULL)
+    {
+       temp = head;
+       head = head->next;
+       free(temp);
+    }
+}
+
+void freeSmall(){
+	struct node* temp;
+
+	while (small != NULL)
+    {
+       temp = small;
+       small = small->next;
+       free(temp);
+    }
+}
+
 #endif
 

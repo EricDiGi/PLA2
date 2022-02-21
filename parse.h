@@ -21,14 +21,11 @@ void match(int);
 
 void match(int token){
 	if(lookahead == token){
-		if(lookahead == IDENT || lookahead == INT_LIT){
-			
-		}
 		lookahead = lexan();
 	}
 	else{
 		printf("Syntax error - Line %d - expected \'%s\' got %s\n",lineno,tableLookup(token),lexeme);
-		exit(0);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -56,7 +53,7 @@ void declaration(){
 // V -> i*
 void variable(int type){
 	while(lookahead == IDENT){
-		putSymbol(lookahead, lexeme);
+		putSymbol(type, lexeme);
 		match(IDENT);
 	}
 }
@@ -66,39 +63,57 @@ void assignment(){
 	char a[30];
 	strcpy(a,lexeme);
 
-	registers = 0;
-	
+	int type = UNKNOWN;
+	if(lookahead == DTYPE){
+		type = type_lookup(lexeme);
+		match(DTYPE);
+		if(putSymbol(type, lexeme) > -1){
+			printf("Error - line %d - Redeclaration of %s\n", lineno, lexeme);
+			exit(EXIT_FAILURE);
+		}
+	}
+	if(lookahead == IDENT && putSymbol(lookahead, lexeme) > -1){
+		printf("Error - line %d - Variable %s is undefined\n", lineno, lexeme);
+		exit(EXIT_FAILURE);
+	}
+
+
 	match(IDENT);
 	if(lookahead != ASSIGN_OP){
 		error("Missing Assignment Operator \'=\'");
-		exit(0);
+		exit(EXIT_FAILURE);
 	}
 
 	match(ASSIGN_OP);
 	term();
 	match(SEMICOLON);
-	//printf("R%d = R%d\n", registers-1, registers);
+
 	registers -= 1;
-	printf("%s = R%d\n", a,registers);
+	sprintf(output_buffer+strlen(output_buffer),"%s = R%d\n", a,registers);
+	printSmall();
+	freeSmall();
 }
 
 // T -> BF(OF)*b | BTb
 void term(){
 	int op;
-	//char* reg = assocRegister(lexeme);
+
 	factor();
 
 	while(lookahead == ADD_OP || lookahead == SUB_OP || lookahead == MULT_OP || lookahead == DIV_OP){
+		putSmall(lookahead, tableLookup(lookahead));
+
 		int op = lookahead;
 		match(lookahead);
 		factor();
-		
-		printf("R%d = R%d %s R%d\n", registers-2,registers-2, tableLookup(op),registers);
+		sprintf(output_buffer+strlen(output_buffer),"R%d = R%d %s R%d\n", registers-2,registers-2, tableLookup(op),registers-1);
 		registers -= 1;
+
 	}
 }
 
 void factor(){
+
 	if(lookahead == LEFT_PAREN){
 		match(LEFT_PAREN);
 		if(lookahead == RIGHT_PAREN){
@@ -111,15 +126,17 @@ void factor(){
 	else if(lookahead == IDENT){
 		if(!find(lexeme,head)){
 			printf("Error - line %d - Variable %s not declared\n", lineno, lexeme);
-			exit(0);
+			exit(EXIT_FAILURE);
 		}
-		printf("R%d = %s\n", registers++, lexeme);
+		sprintf(output_buffer+strlen(output_buffer),"R%d = %s\n", registers++, lexeme);
 		match(IDENT);
 	}
 	else if(lookahead == INT_LIT){
-		printf("R%d = %s\n", registers++, lexeme);
+		sprintf(output_buffer+strlen(output_buffer),"R%d = %s\n", registers++, lexeme);
 		match(INT_LIT);
 	}
+
+	putSmall(lookahead, lexeme);
 }
 
 #endif

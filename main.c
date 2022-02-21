@@ -41,8 +41,23 @@ int main(int argc, char** argv){
 			process();
 		}
 		putSymbol(lookahead, lexeme);
-		printf("Success!\n");
-		printTable();
+		freeHead();
+		fclose(in_fp);
+
+
+
+		char f_name[8] = {0};
+		int i = 0;
+		while(*(argv[1]) != '.' && *(argv[1]) != 0){f_name[i] = *(argv[1]); i++; argv[1]++;}
+		sprintf(f_name+strlen(f_name), ".out");
+		o_fp = fopen(f_name, "w");
+		fwrite(output_buffer, sizeof(char), strlen(output_buffer), o_fp);
+		fclose(o_fp);
+
+
+		printf("%s\n",output_buffer);
+		//printf("Success!\n");
+		//printTable();
 	}
 }
 

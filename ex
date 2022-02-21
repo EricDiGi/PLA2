@@ -1,6 +1,6 @@
 begin
   int ghgghg, abc_edef;
-  int a, b, c, abcd;
+  int a, b, c, abcd, xyz;
   int qwerty;
   ghgghg = (abc_edef * b);
   qwerty=(6 * (a / b));

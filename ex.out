@@ -1,0 +1,36 @@
+R0 = abc_edef
+R1 = b
+R0 = R0 * R1
+ghgghg = R0
+*****[abc_edef, *, b]*****
+R0 = 6
+R1 = a
+R2 = b
+R1 = R1 / R2
+R0 = R0 * R1
+qwerty = R0
+*****[6, *, a, /, b]*****
+R0 = 6
+R1 = abcd
+R0 = R0 - R1
+R1 = a
+R2 = b
+R1 = R1 + R2
+R0 = R0 * R1
+qwerty = R0
+*****[6, -, abcd, *, a, +, b]*****
+R0 = 9
+R1 = 8
+R0 = R0 * R1
+R1 = 7
+R0 = R0 * R1
+R1 = 6
+R0 = R0 * R1
+R1 = a
+R2 = b
+R1 = R1 + R2
+R2 = c
+R1 = R1 + R2
+R0 = R0 / R1
+xyz = R0
+*****[9, *, 8, 7, 6, /, a, +, b, c]*****

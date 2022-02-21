@@ -35,18 +35,20 @@ struct node{
 
 char ch;
 FILE* in_fp;
+FILE* o_fp;
 
 char lexeme[256];
 
 int lookahead;
-char looker;
-int currToken;
 
 int lineno = 1;
 
 int registers = 0;
 
 struct node* head;
+struct node* small;
+
+char output_buffer[1000] = {0};
 
 void error(char* message){
 	printf("Error - Line %d - %s\n", lineno, message);
