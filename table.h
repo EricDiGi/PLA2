@@ -42,7 +42,7 @@ bool putRegister(char* ident, struct node* N, int n);
 
 int putSymbol(int op, char* ident){
 	int idex = -1;
-	struct node* chain_link = (struct node*) malloc(sizeof(struct node));
+	struct node* chain_link = (struct node*)malloc(sizeof(struct node));
 	chain_link->op_code = op;
 	strcpy(chain_link->lexeme, ident);
 	strcpy(chain_link->pos, tab[((op - (op%10))/10)-1][op%10]);
@@ -50,8 +50,10 @@ int putSymbol(int op, char* ident){
 	if(head == NULL){
 		head = chain_link;
 		idex = 0;
+		return idex;
 	}
 	else if(!find(ident, head)){
+		printf("%s\n",ident);
 		idex = 0;
 		struct node* temp = head;
 		while(temp->next != NULL){
@@ -60,6 +62,7 @@ int putSymbol(int op, char* ident){
 		}
 		temp->next = chain_link;
 		idex++;
+		return idex;
 	}
 	return idex;
 }
@@ -88,21 +91,6 @@ bool hasRegister(char* l){
 		}
 	}
 	return false;
-}
-
-char* assocRegister(char* l){
-	if(head == NULL){
-		return 0;
-	}
-	else{
-		struct node* temp = head;
-		while(temp->next != NULL){
-			if(strcmp(temp->lexeme, l) == 0){
-				return temp->reg;
-			}
-			temp = temp->next;
-		}
-	}
 }
 
 char* tableLookup(int tok){
@@ -136,14 +124,16 @@ void printNode(struct node* n){
 }
 
 bool find(char *ident, struct node* N){
-	if(N == NULL)
+	if(N == NULL){
 		return false;
-	if(strcmp(N->lexeme,ident) == 0)
+	}
+	if(strcmp(N->lexeme, ident) == 0){
 		return true;
-	return find(ident, N->next);
+	}
+	return find(ident,N->next);
 }
 
-int putSmall(int op, char* ident){
+bool putSmall(int op, char* ident){
 	bool idex = true;
 	struct node* chain_link = (struct node*) malloc(sizeof(struct node));
 	chain_link->op_code = op;
@@ -153,14 +143,16 @@ int putSmall(int op, char* ident){
 	if(small == NULL){
 		small = chain_link;
 		idex = true;
+		return idex;
 	}
 	else if(!find(ident, small)){
 		idex = true;
 		struct node* temp = small;
-		while(temp->next != NULL){
+		while(temp->next != NULL && chain_link){
 			temp = temp->next;
 		}
 		temp->next = chain_link;
+		return idex;
 	}
 	return idex;
 }
@@ -187,14 +179,7 @@ void freeHead(){
 }
 
 void freeSmall(){
-	struct node* temp;
-
-	while (small != NULL)
-    {
-       temp = small;
-       small = small->next;
-       free(temp);
-    }
+	small = NULL;
 }
 
 #endif

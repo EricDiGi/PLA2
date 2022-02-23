@@ -63,16 +63,14 @@ void assignment(){
 	char a[30];
 	strcpy(a,lexeme);
 
-	int type = UNKNOWN;
 	if(lookahead == DTYPE){
-		type = type_lookup(lexeme);
 		match(DTYPE);
-		if(putSymbol(type, lexeme) > -1){
+		if(find(lexeme, head)){
 			printf("Error - line %d - Redeclaration of %s\n", lineno, lexeme);
 			exit(EXIT_FAILURE);
 		}
 	}
-	if(lookahead == IDENT && putSymbol(lookahead, lexeme) > -1){
+	if(lookahead == IDENT && !find(lexeme,head)){
 		printf("Error - line %d - Variable %s is undefined\n", lineno, lexeme);
 		exit(EXIT_FAILURE);
 	}
@@ -96,7 +94,6 @@ void assignment(){
 
 // T -> BF(OF)*b | BTb
 void term(){
-	int op;
 
 	factor();
 

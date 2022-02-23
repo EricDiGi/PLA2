@@ -45,8 +45,8 @@ int lineno = 1;
 
 int registers = 0;
 
-struct node* head;
-struct node* small;
+struct node* head = NULL;
+struct node* small = NULL;
 
 char output_buffer[1000] = {0};
 

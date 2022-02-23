@@ -1,7 +1,0 @@
-~ Comment
-
-begin
-  int a, b, c;
-  a = (b+2)*(c+3);
-end.
-
