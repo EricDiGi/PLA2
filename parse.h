@@ -53,6 +53,10 @@ void declaration(){
 // V -> i*
 void variable(int type){
 	while(lookahead == IDENT){
+		if(find(lexeme, head)){
+			printf("Error - line %d - Variable %s has already been declared\n",lineno, lexeme);
+			exit(EXIT_FAILURE);
+		}
 		putSymbol(type, lexeme);
 		match(IDENT);
 	}

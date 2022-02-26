@@ -1,7 +1,0 @@
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- ~ This is a comment
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-begin
-  int ghgghg, abc_edef;
-  abc = (abc_edef * b);
-end.

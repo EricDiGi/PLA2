@@ -53,7 +53,7 @@ int putSymbol(int op, char* ident){
 		return idex;
 	}
 	else if(!find(ident, head)){
-		printf("%s\n",ident);
+		//printf("%s\n",ident);
 		idex = 0;
 		struct node* temp = head;
 		while(temp->next != NULL){
@@ -105,7 +105,7 @@ void printTable(){
 		printNode(temp);
 		temp = temp->next;
 	}
-	printf("%s\n", temp->lexeme);
+	//printf("%s\n", temp->lexeme);
 }
 
 //Auxilary functions

@@ -55,8 +55,8 @@ int main(int argc, char** argv){
 		fclose(o_fp);
 
 
-		printf("%s\n",output_buffer);
-		//printf("Success!\n");
+		//printf("%s\n",output_buffer);
+		printf("Success!\n");
 		//printTable();
 	}
 }
