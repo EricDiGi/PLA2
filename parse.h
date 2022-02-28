@@ -16,8 +16,11 @@ void declaration();
 void variable(int);
 void assignment();
 void term();
+void expr();
 void factor();
 void match(int);
+
+char postfix[50] = {0};
 
 void match(int token){
 	if(lookahead == token){
@@ -87,7 +90,9 @@ void assignment(){
 	}
 
 	match(ASSIGN_OP);
-	term();
+	//term();
+	expr();
+	printf("%d - %d\n",lineno, lookahead);
 	match(SEMICOLON);
 
 	registers -= 1;
@@ -101,15 +106,31 @@ void term(){
 
 	factor();
 
-	while(lookahead == ADD_OP || lookahead == SUB_OP || lookahead == MULT_OP || lookahead == DIV_OP){
-		putSmall(lookahead, tableLookup(lookahead));
-
+	while(lookahead == MULT_OP || lookahead == DIV_OP){
+		
 		int op = lookahead;
 		match(lookahead);
 		factor();
+
 		sprintf(output_buffer+strlen(output_buffer),"R%d = R%d %s R%d\n", registers-2,registers-2, tableLookup(op),registers-1);
 		registers -= 1;
 
+		putSmall(op, tableLookup(op));
+	}
+}
+
+void expr(){
+	term();
+	while(lookahead == ADD_OP || lookahead == SUB_OP){
+		
+		int op = lookahead;
+		match(lookahead);
+		//factor();
+		term();
+		sprintf(output_buffer+strlen(output_buffer),"R%d = R%d %s R%d\n", registers-2,registers-2, tableLookup(op),registers-1);
+		registers -= 1;
+
+		putSmall(op, tableLookup(op));
 	}
 }
 
@@ -121,7 +142,7 @@ void factor(){
 			printf("Error - line %d - Expected identifier or literal got ')'\n", lineno);
 			exit(EXIT_FAILURE);
 		}
-		term();
+		expr();
 		match(RIGHT_PAREN);
 	}
 	else if(lookahead == IDENT){
@@ -130,14 +151,15 @@ void factor(){
 			exit(EXIT_FAILURE);
 		}
 		sprintf(output_buffer+strlen(output_buffer),"R%d = %s\n", registers++, lexeme);
+		putSmall(lookahead, lexeme);
 		match(IDENT);
 	}
 	else if(lookahead == INT_LIT){
 		sprintf(output_buffer+strlen(output_buffer),"R%d = %s\n", registers++, lexeme);
+		putSmall(lookahead, lexeme);
 		match(INT_LIT);
 	}
 
-	putSmall(lookahead, lexeme);
 }
 
 #endif

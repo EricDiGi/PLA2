@@ -1,0 +1,26 @@
+R0 = b
+R1 = c
+R0 = R0 + R1
+R1 = d
+R0 = R0 + R1
+R1 = e
+R0 = R0 + R1
+R1 = f
+R0 = R0 + R1
+R1 = ghijk
+R0 = R0 + R1
+a = R0
+*****[b, c, +, d, +, e, +, f, +, ghijk, +]*****
+R0 = c
+R1 = hello
+R0 = R0 + R1
+R1 = a
+R2 = 5
+R1 = R1 - R2
+R0 = R0 * R1
+R1 = e_tt
+R2 = 45678
+R1 = R1 - R2
+R0 = R0 * R1
+b = R0
+*****[c, hello, +, a, 5, -, *, e_tt, 45678, -, *]*****

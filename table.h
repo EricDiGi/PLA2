@@ -145,7 +145,7 @@ bool putSmall(int op, char* ident){
 		idex = true;
 		return idex;
 	}
-	else if(!find(ident, small)){
+	else{ //if (op > 50 && op < 60){
 		idex = true;
 		struct node* temp = small;
 		while(temp->next != NULL && chain_link){
@@ -154,6 +154,15 @@ bool putSmall(int op, char* ident){
 		temp->next = chain_link;
 		return idex;
 	}
+	/*else if((op > 50 && op < 60) || !find(ident, small)){
+		idex = true;
+		struct node* temp = small;
+		while(temp->next != NULL && chain_link){
+			temp = temp->next;
+		}
+		temp->next = chain_link;
+		return idex;
+	}*/
 	return idex;
 }
 
